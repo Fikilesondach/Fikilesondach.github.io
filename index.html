@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fikile Sondach — Quantitative Data Scientist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07090f;
+    --bg-card: #0d1220;
+    --bg-card2: #111827;
+    --border: #1a2540;
+    --border-mid: #243050;
+    --gold: #e8a925;
+    --gold-dim: #b07f18;
+    --teal: #00c9a7;
+    --teal-dim: #008f76;
+    --text: #dde4f0;
+    --text-muted: #64748b;
+    --text-mid: #94a3b8;
+    --red: #e05252;
+    --mono: 'JetBrains Mono', monospace;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -30%;
+    right: -20%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(232,169,37,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(7,9,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 0;
+  }
+  nav .inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    padding: 6rem 0 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    min-height: 85vh;
+  }
+
+  .hero-left {}
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    border: 1px solid var(--teal-dim);
+    padding: 0.35rem 0.75rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.2s;
+  }
+  .hero-name span { color: var(--gold); font-style: italic; }
+
+  .hero-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--text-mid);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.35s;
+  }
+
+  .hero-title .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 14px;
+    background: var(--gold);
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero-summary {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-mid);
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.5s;
+  }
+
+  .hero-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.65s;
+  }
+  .hero-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-mid);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-mid);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .hero-link:hover {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+    background: rgba(232,169,37,0.05);
+  }
+  .hero-link svg { width: 14px; height: 14px; }
+
+  /* Hero right: stats panel */
+  .hero-right {
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+  .stats-panel {
+    border: 1px solid var(--border-mid);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-card);
+  }
+  .stats-header {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .stats-header::before { content: '> '; color: var(--gold); }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .stat-item {
+    padding: 1.5rem 1.25rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-item:nth-child(even) { border-right: none; }
+  .stat-item:nth-last-child(-n+2) { border-bottom: none; }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .stat-num sup {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--gold-dim);
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .exam-strip {
+    padding: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .exam-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.6rem;
+    background: rgba(0,201,167,0.08);
+    border: 1px solid var(--teal-dim);
+    border-radius: 2px;
+    color: var(--teal);
+  }
+
+  /* SECTION LAYOUT */
+  section { padding: 5rem 0; }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .section-label .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .section-label .line {
+    flex: 1;
+    height: 1px;
+    background: var(--border-mid);
+  }
+  .section-label .num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* EXPERIENCE */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), var(--border), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s ease;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.5rem;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(232,169,37,0.4);
+  }
+
+  .job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .job-title {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .job-period {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .job-company {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+  .job-company span {
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+
+  .job-desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    font-style: italic;
+    margin-bottom: 1rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--border-mid);
+  }
+
+  .job-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .job-bullets li {
+    font-size: 14px;
+    color: var(--text-mid);
+    padding-left: 1.25rem;
+    position: relative;
+  }
+  .job-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold-dim);
+    font-size: 12px;
+  }
+  .job-bullets strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* SKILLS */
+  .skills-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .skill-group {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+  }
+  .skill-group.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .skill-group-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skill-bar {
+    margin-bottom: 1rem;
+  }
+  .skill-bar-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+  }
+  .skill-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-mid);
+    letter-spacing: 0.04em;
+  }
+  .skill-pct {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+  .skill-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .skill-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 2px;
+    width: 0;
+    transition: width 1s ease 0.3s;
+  }
+  .skill-fill.teal {
+    background: linear-gradient(90deg, var(--teal-dim), var(--teal));
+  }
+
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .skill-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--border-mid);
+    border-radius: 2px;
+    color: var(--text-mid);
+    transition: all 0.2s;
+  }
+  .skill-tag:hover {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: all 0.25s;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.25s, background 0.25s;
+  }
+  .project-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .project-card:hover {
+    border-color: var(--gold-dim);
+    background: rgba(232,169,37,0.03);
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .project-icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .project-stars {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .project-name {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .project-desc {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .project-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+  .lang-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .lang-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .project-link {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .project-tag-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    background: rgba(232,169,37,0.12);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    border-radius: 2px;
+  }
+
+  .project-tech-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.25rem 0;
+  }
+  .tech-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.55rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-mid);
+    border-radius: 2px;
+    color: var(--text-mid);
+  }
+
+  .projects-loading {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 0;
+  }
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border-mid);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* EDUCATION */
+  .edu-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .edu-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.75rem;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.5s ease;
+  }
+  .edu-card.visible { opacity: 1; transform: translateY(0); }
+
+  .edu-degree {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.01em;
+  }
+  .edu-institution {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .edu-year {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .edu-note {
+    font-size: 13px;
+    color: var(--text-mid);
+    padding: 0.75rem 1rem;
+    background: rgba(232,169,37,0.05);
+    border-left: 2px solid var(--gold-dim);
+    border-radius: 0 2px 2px 0;
+  }
+  .exam-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+  }
+  .exam-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 13px;
+    color: var(--text-mid);
+  }
+  .exam-code {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.5rem;
+    background: rgba(0,201,167,0.08);
+    border: 1px solid var(--teal-dim);
+    color: var(--teal);
+    border-radius: 2px;
+    flex-shrink: 0;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  /* CONTACT / FOOTER */
+  .contact-section {
+    padding: 5rem 0 3rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+  .contact-title {
+    font-family: var(--serif);
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .contact-title span { color: var(--gold); font-style: italic; }
+  .contact-sub {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 2.5rem;
+  }
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .contact-btn.primary {
+    background: var(--gold);
+    color: #07090f;
+    font-weight: 500;
+  }
+  .contact-btn.primary:hover { background: #f0b830; }
+  .contact-btn.secondary {
+    border: 1px solid var(--border-mid);
+    color: var(--text-mid);
+  }
+  .contact-btn.secondary:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  footer {
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+  }
+  footer span { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* DIVIDER */
+  .divider-line {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Language colors */
+  .lang-python { background: #3572A5; }
+  .lang-sql { background: #e38c00; }
+  .lang-jupyter { background: #DA5B0B; }
+  .lang-docker { background: #384d54; }
+  .lang-default { background: var(--text-muted); }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; padding: 4rem 0 3rem; }
+    .hero-right { display: none; }
+    .skills-layout { grid-template-columns: 1fr; }
+    .edu-layout { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .page-wrap { padding: 0 1rem; }
+    .hero-name { font-size: 3rem; }
+    nav .inner { padding: 0 1rem; }
+    .nav-links { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <span class="nav-logo">F.J.SONDACH</span>
+    <ul class="nav-links">
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-wrap">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-tag">Available for new opportunities</div>
+      <h1 class="hero-name">Fikile<br><span>Sondach</span></h1>
+      <p class="hero-title">
+        Senior Data Scientist&nbsp;&mdash;&nbsp;Credit Risk &amp; Quant Analytics<span class="cursor"></span>
+      </p>
+      <p class="hero-summary">
+        Quantitative analyst with 7+ years in South African financial services — combining actuarial rigour with advanced Python and SQL modelling. Builder of end-to-end credit risk, pricing, and valuation models.
+      </p>
+      <div class="hero-links">
+        <a href="mailto:fikilesondach@gmail.com" class="hero-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+          fikilesondach@gmail.com
+        </a>
+        <a href="https://github.com/Fikilesondach" class="hero-link" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          github.com/Fikilesondach
+        </a>
+        <a href="https://linkedin.com/in/fikile-sondach-727846a0" class="hero-link" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="tel:+27680000078" class="hero-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.64 12.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.55 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.09 6.09l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Cape Town, ZA
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="stats-panel">
+        <div class="stats-header">profile.stats</div>
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-num">7<sup>+</sup></div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">5</div>
+            <div class="stat-label">Companies</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">12</div>
+            <div class="stat-label">Distinctions</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">5</div>
+            <div class="stat-label">IFoA Exemptions</div>
+          </div>
+        </div>
+        <div class="exam-strip">
+          <span class="exam-badge">CT1</span>
+          <span class="exam-badge">CT2</span>
+          <span class="exam-badge">CT3</span>
+          <span class="exam-badge">CT7</span>
+          <span class="exam-badge">CT8</span>
+          <span class="exam-badge">IFRS 17</span>
+          <span class="exam-badge">SAM / SII</span>
+          <span class="exam-badge">IFRS 9</span>
+        </div>
+        <div style="padding: 1rem 1.25rem; border-top: 1px solid var(--border);">
+          <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 0.75rem; text-transform: uppercase;">Domain Focus</div>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: var(--mono); font-size: 11px; color: var(--text-mid);">Credit Risk Modelling</span>
+              <span style="font-family: var(--mono); font-size: 10px; color: var(--gold);">████████░ 90%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: var(--mono); font-size: 11px; color: var(--text-mid);">Actuarial Analytics</span>
+              <span style="font-family: var(--mono); font-size: 10px; color: var(--gold);">████████░ 88%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: var(--mono); font-size: 11px; color: var(--text-mid);">Machine Learning</span>
+              <span style="font-family: var(--mono); font-size: 10px; color: var(--teal);">███████░░ 78%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: var(--mono); font-size: 11px; color: var(--text-mid);">Data Engineering</span>
+              <span style="font-family: var(--mono); font-size: 10px; color: var(--teal);">██████░░░ 72%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider-line"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="page-wrap">
+    <div class="section-label">
+      <span class="tag">Professional Experience</span>
+      <span class="line"></span>
+      <span class="num">01</span>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="job-header">
+          <div class="job-title">Senior Business Intelligence Analyst</div>
+          <div class="job-period">Jun 2024 — Present</div>
+        </div>
+        <div class="job-company">Santam Client Solutions <span>· Cape Town</span></div>
+        <p class="job-desc">Leading quantitative analytics and BI delivery within South Africa's largest short-term insurer — building automated, data-driven platforms for 70+ stakeholders.</p>
+        <ul class="job-bullets">
+          <li><strong>Quantitative Modelling:</strong> Designed and implemented complex data models integrating multiple sources — advanced SQL, DAX, and Python across sales, client engagement, and operations.</li>
+          <li><strong>Model Validation:</strong> Built analytical frameworks with automated data quality checks and validation layers — ensuring outputs are accurate, consistent, and audit-ready.</li>
+          <li><strong>Portfolio Performance:</strong> Developed monitoring frameworks tracking NTU rates, cancellations, retention patterns, and commission calculations.</li>
+          <li><strong>Automation:</strong> Replaced manual reporting pipelines — saving 15–20 hours of manual work weekly.</li>
+          <li><strong>Stakeholder Communication:</strong> Translated complex quantitative findings into clear recommendations for senior management.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="job-header">
+          <div class="job-title">Senior Actuarial Analyst</div>
+          <div class="job-period">Feb 2023 — May 2024</div>
+        </div>
+        <div class="job-company">Momentum <span>· Cape Town</span></div>
+        <p class="job-desc">Applied advanced quantitative modelling to pricing strategy and financial forecasting for Momentum's Multiply partner ecosystem.</p>
+        <ul class="job-bullets">
+          <li><strong>Pricing & Risk Modelling:</strong> Developed a configurable pricing model with dynamic rating factors — applying statistical methods to balance profitability and risk.</li>
+          <li><strong>Cash Flow Forecasting:</strong> Delivered budgeting and cash flow forecasting for partner portfolios, translating actuarial outputs into executive-level projections.</li>
+          <li><strong>Medical Scheme Valuation:</strong> Supported actuarial valuation applying reserving and risk assessment for regulatory compliance.</li>
+          <li><strong>Graduate Development:</strong> Mentored 2 graduate actuaries in quantitative modelling methodologies.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="job-header">
+          <div class="job-title">Consulting Actuary</div>
+          <div class="job-period">Jul 2022 — Jan 2023</div>
+        </div>
+        <div class="job-company">Virtual Actuary <span>· Remote</span></div>
+        <ul class="job-bullets">
+          <li><strong>Risk Assessment:</strong> Conducted reinsurance treaty assessments — evaluating risk transfer efficiency, financial exposure, and portfolio impact.</li>
+          <li>Designed actuarial pricing frameworks for funeral products and produced projected financial models supporting strategic planning and new market entry.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="job-header">
+          <div class="job-title">Actuarial Analyst</div>
+          <div class="job-period">Jan 2020 — Jun 2022</div>
+        </div>
+        <div class="job-company">Swiss Re Africa <span>· Cape Town</span></div>
+        <ul class="job-bullets">
+          <li><strong>Portfolio Risk:</strong> Valued disability income portfolio and managed exposure limits — monitoring performance and maintaining appropriate reserving.</li>
+          <li><strong>Large Claims & Reserving:</strong> Oversaw large sum assured claims book with actuarial reserving methods ensuring accurate liability estimates.</li>
+          <li><strong>Reinsurance Analytics:</strong> Collaborated with Pricing and Finance on model interdependencies within a global reinsurance context.</li>
+          <li><strong>Model Standards:</strong> Mentored graduate actuaries in valuation model development and governance standards.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item">
+        <div class="job-header">
+          <div class="job-title">Junior Actuarial Specialist</div>
+          <div class="job-period">Feb 2018 — Dec 2019</div>
+        </div>
+        <div class="job-company">Old Mutual Life Assurance Company of South Africa <span>· Cape Town</span></div>
+        <ul class="job-bullets">
+          <li><strong>Liability Valuation:</strong> Conducted life insurance liability valuation for the Retail Mass Market segment.</li>
+          <li><strong>Analysis of Surplus:</strong> Compiled quarterly Analysis of Surplus with variance explanations and trend analysis for board-level reporting.</li>
+          <li><strong>Regulatory & Audit:</strong> Served as primary liaison with external auditors on technical actuarial queries; collaborated with the capital and risk team on Prophet sensitivity analysis.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="page-wrap">
+    <div class="section-label">
+      <span class="tag">Technical Skills</span>
+      <span class="line"></span>
+      <span class="num">02</span>
+    </div>
+
+    <div class="skills-layout">
+      <div class="skill-group">
+        <div class="skill-group-title">Python Ecosystem</div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Pandas / NumPy</span><span class="skill-pct">95%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="95"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Scikit-learn</span><span class="skill-pct">85%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="85"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">SciPy / Statsmodels</span><span class="skill-pct">82%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="82"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">LightGBM / XGBoost</span><span class="skill-pct">78%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="78"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">SQLAlchemy / ETL</span><span class="skill-pct">80%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="80"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-title">SQL & Databases</div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Advanced SQL</span><span class="skill-pct">92%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="92"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">MySQL</span><span class="skill-pct">90%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">T-SQL / Sybase</span><span class="skill-pct">82%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="82"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Relational DB Design</span><span class="skill-pct">85%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="85"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-title">Modelling & Analytics</div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Credit Risk / PD Scorecard</span><span class="skill-pct">90%</span></div>
+          <div class="skill-track"><div class="skill-fill teal" data-pct="90"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Distribution Fitting / GoF</span><span class="skill-pct">88%</span></div>
+          <div class="skill-track"><div class="skill-fill teal" data-pct="88"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Actuarial Reserving</span><span class="skill-pct">85%</span></div>
+          <div class="skill-track"><div class="skill-fill teal" data-pct="85"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Feature Engineering</span><span class="skill-pct">82%</span></div>
+          <div class="skill-track"><div class="skill-fill teal" data-pct="82"></div></div>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-title">BI, Visualisation & Frameworks</div>
+        <div style="margin-bottom: 1rem;">
+          <div class="skill-bar-header" style="margin-bottom: 0.4rem;"><span class="skill-name">Power BI (DAX, M Query, Dataflows)</span><span class="skill-pct">88%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="88"></div></div>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-bar-header"><span class="skill-name">Excel VBA / Advanced Excel</span><span class="skill-pct">85%</span></div>
+          <div class="skill-track"><div class="skill-fill" data-pct="85"></div></div>
+        </div>
+        <div style="margin-top: 1.25rem;">
+          <div class="skill-group-title" style="margin-bottom: 0.75rem;">Regulatory Frameworks</div>
+          <div class="tag-cloud">
+            <span class="skill-tag">IFRS 17</span>
+            <span class="skill-tag">IFRS 9</span>
+            <span class="skill-tag">SAM / Solvency II</span>
+            <span class="skill-tag">BEL / CSM</span>
+            <span class="skill-tag">SCR / MCR</span>
+            <span class="skill-tag">ORSA</span>
+            <span class="skill-tag">IFoA CT series</span>
+            <span class="skill-tag">ASSA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="page-wrap">
+    <div class="section-label">
+      <span class="tag">GitHub Projects</span>
+      <span class="line"></span>
+      <span class="num">03</span>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- 1. SA Credit Risk Scorecard -->
+      <a href="https://github.com/Fikilesondach/SA-credit-risk-scorecard" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-icon">🏦</span>
+          <span class="project-tag-badge">Featured</span>
+        </div>
+        <div class="project-name">SA Credit Risk Scorecard</div>
+        <div class="project-tech-row">
+          <span class="tech-pill">Python</span><span class="tech-pill">SQL</span><span class="tech-pill">Scikit-learn</span><span class="tech-pill">optbinning</span>
+        </div>
+        <div class="project-desc">End-to-end PD scorecard on South African lending data covering the complete model development lifecycle: data preparation, Weight of Evidence encoding, feature selection, logistic regression, scorecard calibration, and Gini/KS validation. Assesses creditworthiness and drives loan approval decisions in a South African lending context.</div>
+        <div class="project-footer">
+          <span class="lang-dot lang-python"></span><span class="lang-label">Python · SQL</span>
+          <span class="project-link">View on GitHub <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+        </div>
+      </a>
+
+      <!-- 2. SA Credit Stress Monitor -->
+      <a href="https://github.com/Fikilesondach/sa-credit-stress-monitor" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-icon">🚨</span>
+          <span class="project-tag-badge">Live App</span>
+        </div>
+        <div class="project-name">SA Macroeconomic Credit Stress Monitor</div>
+        <div class="project-tech-row">
+          <span class="tech-pill">Python</span><span class="tech-pill">XGBoost</span><span class="tech-pill">SHAP</span><span class="tech-pill">FastAPI</span><span class="tech-pill">Streamlit</span><span class="tech-pill">Docker</span>
+        </div>
+        <div class="project-desc">Cloud-deployed ML pipeline that monitors South African macroeconomic conditions and predicts credit stress regimes using real public data. Ingests live World Bank, FRED, and yfinance feeds → trains an XGBoost classifier with SHAP explainability → serves predictions via FastAPI → visualises current regime probability on a Streamlit dashboard. Deployed on GCP Cloud Run via Docker with GitHub Actions CI/CD.</div>
+        <div class="project-footer">
+          <span class="lang-dot lang-python"></span><span class="lang-label">Python · Docker · GCP</span>
+          <span class="project-link">View on GitHub <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+        </div>
+      </a>
+
+      <!-- 3. Nedbank RMSLE Engine -->
+      <a href="https://github.com/Fikilesondach/nedbank-rmsle-engine" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-icon">📉</span>
+          <span class="project-tag-badge">Competition</span>
+        </div>
+        <div class="project-name">Nedbank Transaction Volume Forecasting — RMSLE Engine</div>
+        <div class="project-tech-row">
+          <span class="tech-pill">Python</span><span class="tech-pill">LightGBM</span><span class="tech-pill">Pandas</span><span class="tech-pill">Streamlit</span>
+        </div>
+        <div class="project-desc">Production-grade LightGBM forecasting pipeline for the Nedbank Transaction Volume Forecasting Challenge on Zindi — a competition with a direct recruitment pathway into Nedbank's data function. Forecasts monthly transaction volumes per customer across an 18M-row banking panel. Deep temporal feature engineering: lag features (t-1 to t-12), rolling 3m/6m means and standard deviations, financial product pivots, demographic interactions, and momentum/volatility ratio features. Trained on log1p(y) for RMSLE alignment with strict walk-forward cross-validation to prevent leakage. Streamlit dashboard tracks leaderboard progress and submission history.</div>
+        <div class="project-footer">
+          <span class="lang-dot lang-python"></span><span class="lang-label">Python · LightGBM</span>
+          <span class="project-link">View on GitHub <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+        </div>
+      </a>
+
+      <!-- 4. E-commerce CX Analytics -->
+      <a href="https://github.com/Fikilesondach/ecommerce-cx-analytics" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-icon">📊</span>
+          <span class="project-tag-badge">Live App</span>
+        </div>
+        <div class="project-name">E-commerce CX Analytics Engine</div>
+        <div class="project-tech-row">
+          <span class="tech-pill">Python</span><span class="tech-pill">statsmodels</span><span class="tech-pill">Holt-Winters</span><span class="tech-pill">Streamlit</span><span class="tech-pill">Jupyter</span>
+        </div>
+        <div class="project-desc">End-to-end contact centre analytics engine for a simulated multi-brand SA e-commerce group (Takealot, Mr D, TFS, Sellers). Five integrated modules: contact volume forecasting with Holt-Winters triple exponential smoothing (MAPE &lt;1%); budget variance decomposition into volume, rate, and mix components; shared service cost allocation using volume-weighted and channel-adjusted methods; Erlang-C capacity planning across three headcount scenarios; and a four-panel executive dashboard with auto-generated narrative summary. Full Streamlit app deployed live.</div>
+        <div class="project-footer">
+          <span class="lang-dot lang-jupyter"></span><span class="lang-label">Python · Jupyter</span>
+          <span class="project-link">View on GitHub <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+        </div>
+      </a>
+
+      <!-- 5. IFRS 17 / SAM Actuarial Engine -->
+      <a href="https://github.com/Fikilesondach/ifrs17-sam-actuarial-engine" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-icon">⚙️</span>
+        </div>
+        <div class="project-name">IFRS 17 / SAM Actuarial Valuation Engine</div>
+        <div class="project-tech-row">
+          <span class="tech-pill">Python</span><span class="tech-pill">SQLAlchemy</span><span class="tech-pill">MySQL</span><span class="tech-pill">NumPy</span>
+        </div>
+        <div class="project-desc">End-to-end actuarial valuation pipeline on a 10,000-policy South African life insurer dataset. Designed a 10-table relational schema across policies, mortality, lapse, expenses, yield curves, and reinsurance tables. Computes Best Estimate Liabilities and CSM roll-forward mechanics aligned to IFRS 17 — directly analogous to IFRS 9 expected credit loss and cash flow discounting frameworks used in lending. Capital modelling aligned to SAM/Solvency II.</div>
+        <div class="project-footer">
+          <span class="lang-dot lang-python"></span><span class="lang-label">Python · MySQL</span>
+          <span class="project-link">View on GitHub <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+        </div>
+      </a>
+
+      <!-- 6. MacroPulse Black-Litterman -->
+      <a href="https://github.com/Fikilesondach/MacroPulse-Black-Litterman-Wealth-Portfolio-Optimiser" target="_blank" class="project-card">
+        <div class="project-header">
+          <span class="project-icon">📈</span>
+        </div>
+        <div class="project-name">MacroPulse — Black-Litterman Portfolio Optimiser</div>
+        <div class="project-tech-row">
+          <span class="tech-pill">Python</span><span class="tech-pill">NumPy</span><span class="tech-pill">SciPy</span><span class="tech-pill">Pandas</span>
+        </div>
+        <div class="project-desc">Bayesian portfolio construction engine implementing the Black-Litterman model with Ledoit-Wolf shrinkage covariance estimation, market-implied equilibrium returns, and confidence-weighted macro views. Blends prior equilibrium allocations with investor views using posterior distribution mixing, generating institutional-grade asset allocations with scenario testing and sensitivity analysis.</div>
+        <div class="project-footer">
+          <span class="lang-dot lang-python"></span><span class="lang-label">Python</span>
+          <span class="project-link">View on GitHub <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="page-wrap">
+    <div class="section-label">
+      <span class="tag">Education & Qualifications</span>
+      <span class="line"></span>
+      <span class="num">04</span>
+    </div>
+
+    <div class="edu-layout">
+      <div class="edu-card">
+        <div class="edu-degree">Bachelor of Science</div>
+        <div style="font-family: var(--mono); font-size: 12px; color: var(--text-mid); margin-bottom: 0.25rem; letter-spacing: 0.04em;">Actuarial Science</div>
+        <div class="edu-institution">University of the Free State</div>
+        <div class="edu-year">Bloemfontein · Graduated 2017</div>
+        <div class="edu-note">Graduated with 12 distinctions throughout the degree programme — including Advanced Financial Mathematics (75%), Inference I (88%), Macroeconomics (81%), and Ordinary Differential Equations (87%).</div>
+      </div>
+
+      <div class="edu-card">
+        <div class="edu-degree">Professional Examinations</div>
+        <div style="font-family: var(--mono); font-size: 12px; color: var(--text-mid); margin-bottom: 0.25rem; letter-spacing: 0.04em;">Institute and Faculty of Actuaries (IFoA)</div>
+        <div class="edu-institution">ASSA — Actuarial Society of South Africa</div>
+        <div class="edu-year">5 Core Technical Exemptions</div>
+        <div class="exam-list">
+          <div class="exam-item"><span class="exam-code">CT1</span> Financial Mathematics</div>
+          <div class="exam-item"><span class="exam-code">CT2</span> Financial Management & Reporting</div>
+          <div class="exam-item"><span class="exam-code">CT3</span> Probability & Mathematical Statistics</div>
+          <div class="exam-item"><span class="exam-code">CT7</span> Business Economics</div>
+          <div class="exam-item"><span class="exam-code">CT8</span> Financial Economics</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-line"></div>
+
+<!-- CONTACT -->
+<div class="contact-section" id="contact">
+  <div class="page-wrap">
+    <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem;">Open to opportunities</div>
+    <h2 class="contact-title">Let's <span>connect</span></h2>
+    <p class="contact-sub">Cape Town, South Africa · Available for senior data science & actuarial roles</p>
+    <div class="contact-links">
+      <a href="mailto:fikilesondach@gmail.com" class="contact-btn primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        Email Me
+      </a>
+      <a href="https://linkedin.com/in/fikile-sondach-727846a0" target="_blank" class="contact-btn secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.2 24 22.222 24h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://github.com/Fikilesondach" target="_blank" class="contact-btn secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em;">
+      +27 68 000 0078
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="page-wrap">
+    <span>Fikile Joel Sondach</span> · Built with HTML + GitHub API · Last updated <span id="last-updated"></span>
+  </div>
+</footer>
+
+<script>
+  // Footer date
+  const d = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('last-updated').textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+  // Scroll-reveal: timeline items, skill groups, edu cards, project cards
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.timeline-item, .skill-group, .edu-card, .project-card').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 4) * 0.08}s`;
+    revealObserver.observe(el);
+  });
+
+  // Skill bar fill animation (triggers when group scrolls into view)
+  const skillObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.skill-fill').forEach(fill => {
+          fill.style.width = fill.dataset.pct + '%';
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.skill-group').forEach(g => skillObserver.observe(g));
+</script>
+</body>
+</html>
